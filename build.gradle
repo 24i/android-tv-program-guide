@@ -26,3 +26,34 @@ allprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+
+ext.shouldIncludeDependency = { dependency ->
+    if (!(dependency instanceof ModuleDependency)) return false
+    if (dependency.version == 'unspecified') return false
+
+    return true
+}
+
+ext.createDependenciesNode = { originNode, configurations ->
+    def dependenciesNode = originNode.appendNode('dependencies')
+
+    configurations.implementation.allDependencies.each { dp ->
+        def canInclude = rootProject.ext.shouldIncludeDependency(dp)
+        if (canInclude) {
+            def dependencyNode = dependenciesNode.appendNode('dependency')
+            dependencyNode.appendNode('groupId', dp.group)
+            dependencyNode.appendNode('artifactId', dp.name)
+            dependencyNode.appendNode('version', dp.version)
+
+            // for exclusions
+            if (dp.excludeRules.size() > 0) {
+                def exclusions = dependencyNode.appendNode('exclusions')
+                dp.excludeRules.each { ExcludeRule ex ->
+                    def exclusion = exclusions.appendNode('exclusion')
+                    exclusion.appendNode('groupId', ex.group)
+                    exclusion.appendNode('artifactId', ex.module)
+                }
+            }
+        }
+    }
+}

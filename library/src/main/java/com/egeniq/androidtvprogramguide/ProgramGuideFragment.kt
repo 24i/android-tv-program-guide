@@ -439,7 +439,7 @@ abstract class ProgramGuideFragment<T> : Fragment(), ProgramGuideManager.Listene
             }
             currentTimeIndicator?.translationX = offset - currentTimeIndicatorWidth / 2f
             currentTimeIndicator?.visibility = View.VISIBLE
-            setJumpToLiveButtonVisible(currentState != State.Loading && offset > gridWidth)
+            setJumpToLiveButtonVisible(currentState != State.Loading && offset > gridWidth && (programGuideManager.getStartTime() <= now && now <= programGuideManager.getEndTime()))
         }
     }
 

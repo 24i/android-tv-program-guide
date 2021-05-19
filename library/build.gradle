@@ -84,7 +84,7 @@ project.afterEvaluate {
         repositories {
             maven {
                 name "Artifactory"
-                url "https://maven.pkg.github.com/24i/vaster-android-sdk"
+                url "https://maven.pkg.github.com/24i/android-tv-program-guide"
                 credentials {
                     username = "$mavenRepositoryUsername"
                     password = "$mavenRepositoryPassword"
